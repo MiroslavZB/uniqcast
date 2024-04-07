@@ -38,8 +38,7 @@ class LoginState extends _$LoginState {
 
       StorageProvider.setToken(data.token);
       StorageProvider.setExpiryDate(expiryDate);
-
-      userStateProvider.overrideWithValue(UserModel.fromLoginResponse(data, expiryDate));
+      ref.watch(userStateProvider.notifier).set(UserModel.fromLoginResponse(data, expiryDate));
       ref.invalidate(routerProvider);
     } catch (e, s) {
       state = AsyncValue.error(e, s);
