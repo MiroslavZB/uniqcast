@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:uniqcast/api/headers_interceptor.dart';
 import 'package:uniqcast/api/log_interceptor.dart';
-import 'package:uniqcast/authentication/login_response.dart';
+import 'package:uniqcast/modules/authentication/login_response.dart';
 
 typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 
@@ -45,7 +45,6 @@ abstract class Client {
     final jsonFactory = _factories[T];
 
     if (jsonFactory == null || jsonFactory is! JsonFactory<T>) {
-      print(T);
       throw ('$T is not Serializable');
     }
 

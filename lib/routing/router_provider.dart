@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:uniqcast/authentication/login_page.dart';
+import 'package:uniqcast/modules/authentication/login_page.dart';
 import 'package:uniqcast/root.dart';
 import 'package:uniqcast/routing/app_route.dart';
 import 'package:uniqcast/utils/extensions.dart';

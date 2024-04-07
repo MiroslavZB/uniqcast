@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uniqcast/authentication/auth_service.dart';
+import 'package:uniqcast/modules/authentication/auth_service.dart';
 import 'package:uniqcast/routing/router_provider.dart';
 import 'package:uniqcast/utils/providers/storage_provider.dart';
 

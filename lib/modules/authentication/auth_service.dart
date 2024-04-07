@@ -1,5 +1,5 @@
 import 'package:uniqcast/api/client.dart';
-import 'package:uniqcast/authentication/login_response.dart';
+import 'package:uniqcast/modules/authentication/login_response.dart';
 
 abstract class AuthService {
   static Future<LoginResponse> login({
