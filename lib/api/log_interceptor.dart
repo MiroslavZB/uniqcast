@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:dio/dio.dart';
+import 'package:uniqcast/api/server_error.dart';
 
 enum LogLevel {
   /// No logs will be shown
@@ -66,9 +67,13 @@ class CustomLogInterceptor extends Interceptor {
       log('Response<--- ${err.response!.requestOptions.method.toUpperCase()} ${err.response!.requestOptions.uri} '
           'StatusCode: ${err.response!.statusCode}');
       log('data: ${err.response!.data}');
+      return super.onError(err.copyWith(error: ServerError.fromJson(err.response!.data)), handler);
+
+      // throw (ServerError.fromJson(err.response!.data));
     } else {
       log('options: ${err.requestOptions}');
       log('message ${err.message}');
+      return super.onError(err, handler);
     }
   }
 }

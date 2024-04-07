@@ -26,15 +26,15 @@ abstract class Client {
     );
 
   // Methods
-  static Future<T> get<T>(String path) async => _dio.get(path).then(_handleResponse);
+  static Future<T> get<T>(String path) async => _dio.get(path).then((value) => _handleResponse<T>(value));
 
   static Future<T> post<T>(String path, {Map<String, dynamic>? body, Map<String, dynamic>? queryParams}) async =>
-      _dio.post(path, data: body, queryParameters: queryParams).then(_handleResponse);
+      _dio.post(path, data: body, queryParameters: queryParams).then((value) => _handleResponse<T>(value));
 
   static Future<T> put<T>(String path, {required Map<String, dynamic> body}) async =>
-      _dio.get(path, data: body).then(_handleResponse);
+      _dio.get(path, data: body).then((value) => _handleResponse<T>(value));
 
-  static Future<T> delete<T>(String path) async => _dio.delete(path).then(_handleResponse);
+  static Future<T> delete<T>(String path) async => _dio.delete(path).then((value) => _handleResponse<T>(value));
 
   // Handlers
   static T _handleResponse<T>(Response<dynamic> response) {
@@ -45,6 +45,7 @@ abstract class Client {
     final jsonFactory = _factories[T];
 
     if (jsonFactory == null || jsonFactory is! JsonFactory<T>) {
+      print(T);
       throw ('$T is not Serializable');
     }
 

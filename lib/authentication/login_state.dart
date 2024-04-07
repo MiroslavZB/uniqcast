@@ -12,7 +12,7 @@ class LoginState extends _$LoginState {
   @override
   Future<void> build() async {}
 
-  Future<void> tryLogin({
+  Future<void> login({
     required String username,
     required String password,
     required String firstName,
@@ -31,12 +31,12 @@ class LoginState extends _$LoginState {
       final token = data.token;
 
       StorageProvider.setToken(token);
-      state = const AsyncValue.data(null);
       ref.invalidate(routerProvider);
     } catch (e, s) {
       log('try login error $s $s');
       state = AsyncValue.error(e, s);
     }
+    state = const AsyncValue.data(null);
   }
 
   void logout() {
