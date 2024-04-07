@@ -12,8 +12,8 @@ abstract class AuthService {
         '/global/login',
         body: {
           'login_type': 'Credentials',
-          'username': username, // 'flutter_test',
-          'password': password, // '1111',
+          'username': username,
+          'password': password,
           'device': 'flutter_test_device_${firstName}_$lastName'
         },
       );
