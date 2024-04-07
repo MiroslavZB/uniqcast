@@ -12,7 +12,7 @@ LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
       name: json['operator_name'] as String?,
       userId: json['user_id'] as int,
       isBlocked: json['is_blocked'] as bool,
-      expiryTime: json['expires_in'] as String?,
+      expiryTime: json['expires_in'] as int?,
     );
 
 Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>

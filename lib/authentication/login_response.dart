@@ -12,8 +12,10 @@ class LoginResponse {
   final String? name;
   @JsonKey(name: 'is_blocked')
   final bool isBlocked;
+
+  /// in ms
   @JsonKey(name: 'expires_in')
-  final String? expiryTime;
+  final int? expiryTime;
 
   LoginResponse({
     required this.token,
