@@ -1,5 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uniqcast/modules/authentication/auth_service.dart';
+import 'package:uniqcast/modules/user/user_model.dart';
+import 'package:uniqcast/modules/user/user_state.dart';
 import 'package:uniqcast/routing/router_provider.dart';
 import 'package:uniqcast/utils/providers/storage_provider.dart';
 
@@ -26,13 +28,18 @@ class LoginState extends _$LoginState {
         lastName: lastName,
       );
 
-      final token = data.token;
+      final expiryTime = int.tryParse(data.expiryTime ?? '');
+
       final expiryDate = data.expiryTime == null
           ? DateTime(2099, 12, 12)
-          : DateTime.now().add(Duration(milliseconds: data.expiryTime!));
+          : expiryTime == null
+              ? null
+              : DateTime.now().add(Duration(milliseconds: expiryTime));
 
-      StorageProvider.setToken(token);
+      StorageProvider.setToken(data.token);
       StorageProvider.setExpiryDate(expiryDate);
+
+      userStateProvider.overrideWithValue(UserModel.fromLoginResponse(data, expiryDate));
       ref.invalidate(routerProvider);
     } catch (e, s) {
       state = AsyncValue.error(e, s);

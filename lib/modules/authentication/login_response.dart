@@ -8,19 +8,25 @@ class LoginResponse {
   final String token;
   @JsonKey(name: 'user_id')
   final int userId;
+  @JsonKey(name: 'operator_uid')
+  final String operatorUid;
   @JsonKey(name: 'operator_name')
   final String? name;
   @JsonKey(name: 'is_blocked')
   final bool isBlocked;
+  @JsonKey(name: 'device_id')
+  final int deviceId;
 
   /// in ms
   @JsonKey(name: 'expires_in')
-  final int? expiryTime;
+  final String? expiryTime;
 
   LoginResponse({
     required this.token,
     required this.name,
     required this.userId,
+    required this.operatorUid,
+    required this.deviceId,
     required this.isBlocked,
     required this.expiryTime,
   });
