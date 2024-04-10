@@ -15,8 +15,6 @@ class CustomRequestInterceptor extends Interceptor {
       if (StorageProvider.token.safeNotEmpty) 'Authorization': 'Bearer ${StorageProvider.token}',
     };
 
-    // TODO format options.data toJson()
-
     return super.onRequest(options, handler);
   }
 }
