@@ -1,48 +1,64 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uniqcast/api/factories.dart';
 import 'package:uniqcast/api/headers_interceptor.dart';
 import 'package:uniqcast/api/log_interceptor.dart';
-import 'package:uniqcast/modules/authentication/login_response.dart';
+import 'package:uniqcast/utils/extensions.dart';
+import 'package:uniqcast/utils/providers/storage_provider.dart';
 
-typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
+final clientProvider = Provider<Client>((ref) => Client(ref));
 
-abstract class Client {
+class Client {
+  final ProviderRef<Client> ref;
+  Client(this.ref);
+
   // Logging
-  static LogLevel get _logLevel => LogLevel.full;
-
-  // Factories for conversion
-  static final Map<Type, JsonFactory> _factories = {
-    LoginResponse: LoginResponse.fromJson,
-  };
+  LogLevel get _logLevel => LogLevel.full;
 
   // Client
-  static String get _baseUrl => 'https://office-new-dev.uniqcast.com:12611/api/client/v2';
+  String get _baseUrl => 'https://office-new-dev.uniqcast.com:12611/api/client';
 
-  static final Dio _dio = Dio(BaseOptions(baseUrl: _baseUrl))
+  Dio get _dio => Dio(BaseOptions(baseUrl: _baseUrl))
     ..interceptors.addAll(
       [
-        CustomLogInterceptor(_logLevel),
         CustomRequestInterceptor(_logLevel),
+        CustomLogInterceptor(_logLevel, ref),
       ],
     );
 
   // Methods
-  static Future<T> get<T>(String path) async => _dio.get(path).then((value) => _handleResponse<T>(value));
+  Future<T> get<T>(String path, {Map<String, dynamic>? queryParams}) async {
+    _dio.options.headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      if (StorageProvider.token.safeNotEmpty) 'Authorization': 'Bearer ${StorageProvider.token}',
+    };
+    return _dio.get(path, queryParameters: queryParams).then((value) => _handleResponse<T>(value));
+  }
 
-  static Future<T> post<T>(String path, {Map<String, dynamic>? body, Map<String, dynamic>? queryParams}) async =>
+  Future<T> post<T>(String path, {Map<String, dynamic>? body, Map<String, dynamic>? queryParams}) async =>
       _dio.post(path, data: body, queryParameters: queryParams).then((value) => _handleResponse<T>(value));
 
-  static Future<T> put<T>(String path, {required Map<String, dynamic> body}) async =>
+  Future<T> put<T>(String path, {required Map<String, dynamic> body}) async =>
       _dio.get(path, data: body).then((value) => _handleResponse<T>(value));
 
-  static Future<T> delete<T>(String path) async => _dio.delete(path).then((value) => _handleResponse<T>(value));
+  Future<T> delete<T>(String path) async => _dio.delete(path).then((value) => _handleResponse<T>(value));
 
   // Handlers
-  static T _handleResponse<T>(Response<dynamic> response) {
-    final json = response.data;
+  T _handleResponse<T>(Response<dynamic> response) {
+    final responseData = response.data;
 
-    if (json is! Map<String, dynamic>) throw ('Wrong format $json');
+    log('Response<--- data Type: ${responseData.runtimeType}\n\n\nResponse Data: $responseData');
 
-    final jsonFactory = _factories[T];
+    if (responseData.runtimeType == T) return responseData;
+
+    if (responseData is! Map<String, dynamic>) throw ('Wrong format $responseData');
+
+    final jsonFactory = factories[T];
 
     if (jsonFactory == null || jsonFactory is! JsonFactory<T>) {
       throw ('$T is not Serializable');

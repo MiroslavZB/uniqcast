@@ -1,15 +1,19 @@
 import 'package:uniqcast/api/client.dart';
 import 'package:uniqcast/modules/authentication/login_response.dart';
 
-abstract class AuthService {
-  static Future<LoginResponse> login({
+class AuthService {
+  final Client client;
+
+  AuthService(this.client);
+
+  Future<LoginResponse> login({
     required String username,
     required String password,
     required String firstName,
     required String lastName,
   }) async =>
-      Client.post<LoginResponse>(
-        '/global/login',
+      client.post<LoginResponse>(
+        '/v1/global/login',
         body: {
           'login_type': 'Credentials',
           'username': username,
