@@ -17,7 +17,7 @@ class Client {
   Client(this.ref);
 
   // Logging
-  LogLevel get _logLevel => LogLevel.full;
+  LogLevel get _logLevel => LogLevel.basic;
 
   // Client
   String get _baseUrl => 'https://office-new-dev.uniqcast.com:12611/api/client';
@@ -51,8 +51,6 @@ class Client {
   // Handlers
   T _handleResponse<T>(Response<dynamic> response) {
     final responseData = response.data;
-
-    log('Response<--- data Type: ${responseData.runtimeType}\n\n\nResponse Data: $responseData');
 
     if (responseData.runtimeType == T) return responseData;
 

@@ -34,20 +34,19 @@ class CustomLogInterceptor extends Interceptor {
     log('Request---> ${options.method.toUpperCase()} ${options.uri} ');
 
     if (logLevel == LogLevel.full) {
-      log('Request Headers: ${options.headers}');
+      log('Request Headers---> ${options.headers}');
     } else {
-      log('Request Authorization: ${options.headers['Authorization']}');
+      log('Request Authorization---> ${options.headers['Authorization']}');
     }
 
-    final String message = 'Request data: ${options.data}';
+    final String message = 'Request Data---> ${options.data}';
 
     if (logLevel == LogLevel.basic) {
-      log(message.substring(0, min(message.length - 1, 500)));
+      log(message.substring(0, min(message.length, 500)));
     } else {
       log(message);
     }
 
-    if (logLevel == LogLevel.basic) log('Request Authorization: ${options.headers['Authorization']}');
     return super.onRequest(options, handler);
   }
 
@@ -55,11 +54,16 @@ class CustomLogInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (logLevel == LogLevel.none) return super.onResponse(response, handler);
 
-    log('Response<--- ${response.requestOptions.method.toUpperCase()} ${response.requestOptions.uri} '
-        'StatusCode: ${response.statusCode}');
+    log('Response StatusCode<--- ${response.statusCode} Type<--- ${response.data.runtimeType} '
+        '${response.requestOptions.method.toUpperCase()} ${response.requestOptions.uri}');
 
-    print('type = ${response.data.runtimeType}');
-    if (logLevel != LogLevel.basic) log('Data: ${response.data}');
+    final String message = 'Response Data<--- ${response.data}';
+
+    if (logLevel == LogLevel.basic) {
+      log(message.substring(0, min(message.length, 500)));
+    } else {
+      log(message);
+    }
 
     return super.onResponse(response, handler);
   }
@@ -68,14 +72,26 @@ class CustomLogInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (logLevel == LogLevel.none) return super.onError(err, handler);
 
-    log('Caught error');
+    log('Error---Response');
     if (err.response != null) {
-      log('Response<--- ${err.response!.requestOptions.method.toUpperCase()} ${err.response!.requestOptions.uri} '
-          'StatusCode: ${err.response!.statusCode}');
+      log('Error---StatusCode<--- ${err.response!.statusCode} type<--- ${err.response!.data.runtimeType} '
+          '${err.response!.requestOptions.method.toUpperCase()} ${err.response!.requestOptions.uri}');
 
-      log('data: ${err.response!.data}');
-      log('Headers ${err.response!.headers}');
-      log('message ${err.message}');
+      final String message = 'Error---Data<--- ${err.response!.data}';
+
+      if (logLevel == LogLevel.basic) {
+        log(message.substring(0, min(message.length, 500)));
+      } else {
+        log(message);
+      }
+
+      if (logLevel != LogLevel.basic) log('Error data---${err.response!.data}');
+
+      if (logLevel == LogLevel.full) {
+        log('Error---Headers---> ${err.response!.headers}');
+      } else {
+        log('Error---Authorization---> ${err.response!.headers['Authorization']}');
+      }
 
       if (err.response!.statusCode == 401) {
         StorageProvider.logOut();
@@ -83,8 +99,6 @@ class CustomLogInterceptor extends Interceptor {
       }
 
       return super.onError(err.copyWith(error: ServerError.fromJson(err.response!.data)), handler);
-
-      // throw (ServerError.fromJson(err.response!.data));
     } else {
       log('caught error with message: ${err.message}');
       return super.onError(err, handler);
