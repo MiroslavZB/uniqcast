@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uniqcast/api/client.dart';
 import 'package:uniqcast/modules/authentication/auth_service.dart';
 import 'package:uniqcast/modules/user/user_model.dart';
 import 'package:uniqcast/modules/user/user_state.dart';
@@ -9,8 +10,11 @@ part 'login_state.g.dart';
 
 @riverpod
 class LoginState extends _$LoginState {
+  late AuthService authService;
   @override
-  Future<void> build() async {}
+  Future<void> build() async {
+    authService = AuthService(ref.watch(clientProvider));
+  }
 
   Future<void> login({
     required String username,
@@ -21,7 +25,7 @@ class LoginState extends _$LoginState {
     try {
       state = const AsyncValue.loading();
 
-      final data = await AuthService.login(
+      final data = await authService.login(
         username: username,
         password: password,
         firstName: firstName,
@@ -38,7 +42,11 @@ class LoginState extends _$LoginState {
 
       StorageProvider.setToken(data.token);
       StorageProvider.setExpiryDate(expiryDate);
-      ref.watch(userStateProvider.notifier).set(UserModel.fromLoginResponse(data, expiryDate));
+
+      final user = UserModel.fromLoginResponse(data, expiryDate);
+      StorageProvider.setUser(user);
+
+      ref.watch(userStateProvider.notifier).set(user);
       ref.invalidate(routerProvider);
     } catch (e, s) {
       state = AsyncValue.error(e, s);
@@ -47,8 +55,7 @@ class LoginState extends _$LoginState {
   }
 
   void logout() {
-    StorageProvider.setToken(null);
-    StorageProvider.setExpiryDate(null);
+    StorageProvider.logOut();
     ref.invalidate(routerProvider);
   }
 }

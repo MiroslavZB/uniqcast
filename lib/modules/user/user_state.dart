@@ -6,7 +6,7 @@ part 'user_state.g.dart';
 @Riverpod(keepAlive: true)
 class UserState extends _$UserState {
   @override
-  UserModel build() => throw Exception('User hasn\'t been initialized');
+  UserModel? build() =>  null;
 
-  void set(UserModel userModel) => state = userModel;
+  void set(UserModel? userModel) => state = userModel;
 }
