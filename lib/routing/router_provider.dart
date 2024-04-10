@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uniqcast/modules/authentication/login_page.dart';
+import 'package:uniqcast/modules/user/user_state.dart';
 import 'package:uniqcast/root.dart';
 import 'package:uniqcast/routing/app_route.dart';
 import 'package:uniqcast/utils/extensions.dart';
@@ -11,7 +13,7 @@ final rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: AppRoute.root.path,
+    initialLocation: AppRoute.login.path,
     navigatorKey: rootNavigatorKey,
     redirect: (context, state) {
       final bool isAuthenticated = StorageProvider.token.safeNotEmpty;
@@ -19,7 +21,12 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       if (!isAuthenticated && !isAuthPage) return AppRoute.login.path;
 
-      if (isAuthenticated && isAuthPage) return AppRoute.root.path;
+      if (isAuthenticated && isAuthPage) {
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          ref.watch(userStateProvider.notifier).set(StorageProvider.user);
+        });
+        return AppRoute.root.path;
+      }
 
       return null;
     },
