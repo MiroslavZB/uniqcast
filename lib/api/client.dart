@@ -64,6 +64,34 @@ class Client {
       throw ('$T is not Serializable');
     }
 
-    return jsonFactory(json['data']);
+    return jsonFactory(responseData['data']);
+  }
+
+  Future<File?> downloadFile({
+    required String savePath,
+    required String endPoint,
+    Map<String, dynamic>? queryParams,
+  }) async {
+    try {
+      Response response = await _dio.get(
+        endPoint,
+        queryParameters: queryParams,
+        options: Options(responseType: ResponseType.bytes, followRedirects: false),
+      );
+
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
+
+      final String path = '$appDocPath/$savePath';
+
+      File file = File(path);
+      final RandomAccessFile raf = file.openSync(mode: FileMode.write);
+      raf.writeFromSync(response.data as List<int>);
+      await raf.close();
+      return file;
+    } catch (e, s) {
+      log('Downloading file from $endPoint with $queryParams returned an error: $e $s');
+      return null;
+    }
   }
 }
