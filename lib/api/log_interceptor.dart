@@ -2,7 +2,11 @@ import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:dio/dio.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uniqcast/api/client.dart';
 import 'package:uniqcast/api/server_error.dart';
+import 'package:uniqcast/routing/router_provider.dart';
+import 'package:uniqcast/utils/providers/storage_provider.dart';
 
 enum LogLevel {
   /// No logs will be shown
@@ -20,21 +24,22 @@ enum LogLevel {
 
 class CustomLogInterceptor extends Interceptor {
   final LogLevel logLevel;
-  const CustomLogInterceptor(this.logLevel);
+  final ProviderRef<Client> ref;
+  const CustomLogInterceptor(this.logLevel, this.ref);
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (logLevel == LogLevel.none) return super.onRequest(options, handler);
 
-    log('Request---> ${options.method.toUpperCase()} => ${options.uri} ');
+    log('Request---> ${options.method.toUpperCase()} ${options.uri} ');
 
     if (logLevel == LogLevel.full) {
-      log('Headers: ${options.headers}');
+      log('Request Headers: ${options.headers}');
     } else {
-      log('Authorization: ${options.headers['Authorization']}');
+      log('Request Authorization: ${options.headers['Authorization']}');
     }
 
-    final String message = 'Data: ${options.data}';
+    final String message = 'Request data: ${options.data}';
 
     if (logLevel == LogLevel.basic) {
       log(message.substring(0, min(message.length - 1, 500)));
@@ -42,7 +47,7 @@ class CustomLogInterceptor extends Interceptor {
       log(message);
     }
 
-    if (logLevel == LogLevel.basic) log('Authorization: ${options.headers['Authorization']}');
+    if (logLevel == LogLevel.basic) log('Request Authorization: ${options.headers['Authorization']}');
     return super.onRequest(options, handler);
   }
 
@@ -53,6 +58,7 @@ class CustomLogInterceptor extends Interceptor {
     log('Response<--- ${response.requestOptions.method.toUpperCase()} ${response.requestOptions.uri} '
         'StatusCode: ${response.statusCode}');
 
+    print('type = ${response.data.runtimeType}');
     if (logLevel != LogLevel.basic) log('Data: ${response.data}');
 
     return super.onResponse(response, handler);
@@ -66,13 +72,21 @@ class CustomLogInterceptor extends Interceptor {
     if (err.response != null) {
       log('Response<--- ${err.response!.requestOptions.method.toUpperCase()} ${err.response!.requestOptions.uri} '
           'StatusCode: ${err.response!.statusCode}');
+
       log('data: ${err.response!.data}');
+      log('Headers ${err.response!.headers}');
+      log('message ${err.message}');
+
+      if (err.response!.statusCode == 401) {
+        StorageProvider.logOut();
+        ref.invalidate(routerProvider);
+      }
+
       return super.onError(err.copyWith(error: ServerError.fromJson(err.response!.data)), handler);
 
       // throw (ServerError.fromJson(err.response!.data));
     } else {
-      log('options: ${err.requestOptions}');
-      log('message ${err.message}');
+      log('caught error with message: ${err.message}');
       return super.onError(err, handler);
     }
   }
