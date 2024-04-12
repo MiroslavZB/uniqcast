@@ -1,5 +1,5 @@
 import 'package:uniqcast/modules/authentication/login_response.dart';
-import 'package:uniqcast/modules/user_channels/channel.dart';
+import 'package:uniqcast/modules/channels/models/channel.dart';
 import 'package:uniqcast/modules/user_packages/user_package.dart';
 
 typedef JsonFactory<T> = T Function(dynamic data);
