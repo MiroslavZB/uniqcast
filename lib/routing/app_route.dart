@@ -1,9 +1,7 @@
 enum AppRoute {
   root('/'),
   login('/login'),
-  register('/register'),
-  home('/home'),
-  channelDetails('/channel-details');
+  channelStream('/channel-stream');
 
   final String path;
   final String name;

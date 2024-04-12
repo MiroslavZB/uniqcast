@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:uniqcast/api/client.dart';
-import 'package:uniqcast/modules/user_channels/channel.dart';
+import 'package:uniqcast/modules/channels/models/channel.dart';
 
 class ChannelsService {
   final Client client;
@@ -38,4 +38,3 @@ class ChannelsService {
         queryParams: {'accessKey': accessKey},
       );
 }
-//https://office-new-dev.uniqcast.com:12802/api/client/v1/global/images/5628?accessKey=WkVjNWNscFhORDBLCg==

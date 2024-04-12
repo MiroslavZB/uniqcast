@@ -6,7 +6,7 @@ part of 'channel_image_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$channelImageStateHash() => r'42d182e9ac7c4fbed2cfb270d74f6f21c49c3576';
+String _$channelImageStateHash() => r'd0ce2ad091ae35f911a9c927daba2f7c5be7a5f5';
 
 /// Copied from Dart SDK
 class _SystemHash {
