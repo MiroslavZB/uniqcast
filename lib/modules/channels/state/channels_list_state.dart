@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uniqcast/api/client.dart';
-import 'package:uniqcast/modules/user/user_state.dart';
 import 'package:uniqcast/modules/channels/models/channel.dart';
 import 'package:uniqcast/modules/channels/service/channels_service.dart';
+import 'package:uniqcast/modules/user/user_state.dart';
 import 'package:uniqcast/modules/user_packages/packages_state.dart';
 import 'package:uniqcast/utils/extensions.dart';
 

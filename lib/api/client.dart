@@ -103,7 +103,7 @@ class Client {
     Map<String, dynamic>? queryParams,
   }) async {
     try {
-      if(!kIsWeb) return null;
+      if (!kIsWeb) return null;
       Response response = await _dio.get(
         endPoint,
         queryParameters: queryParams,

@@ -17,7 +17,7 @@ class ChannelImageState extends _$ChannelImageState {
         logoId: channel.id, // channel.logoId
         channelId: channel.id,
       );
-      if(bytes == null) return null;
+      if (bytes == null) return null;
       return Image.memory(bytes, fit: BoxFit.cover);
     }
     final file = await ChannelsService(ref.watch(clientProvider)).channelImage(
@@ -25,7 +25,7 @@ class ChannelImageState extends _$ChannelImageState {
       channelId: channel.id,
     );
 
-    if(file == null) return null;
+    if (file == null) return null;
     return Image.file(file, fit: BoxFit.cover);
   }
 }

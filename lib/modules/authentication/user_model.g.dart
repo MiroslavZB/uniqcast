@@ -1,29 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_response.dart';
+part of 'user_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
-    LoginResponse(
+UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       token: json['access_token'] as String,
       userId: json['user_id'] as int,
-      name: json['operator_name'] as String?,
       operatorUid: json['operator_uid'] as String,
-      deviceId: json['device_id'] as int,
-      isBlocked: json['is_blocked'] as bool,
       expiryTime: json['expires_in'] as String?,
+      name: json['operator_name'] as String?,
     );
 
-Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'access_token': instance.token,
       'user_id': instance.userId,
       'operator_uid': instance.operatorUid,
-      'operator_name': instance.name,
-      'is_blocked': instance.isBlocked,
-      'device_id': instance.deviceId,
       'expires_in': instance.expiryTime,
+      'operator_name': instance.name,
     };

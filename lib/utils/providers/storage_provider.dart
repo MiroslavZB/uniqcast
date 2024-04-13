@@ -1,5 +1,5 @@
 import 'package:get_storage/get_storage.dart';
-import 'package:uniqcast/modules/user/user_model.dart';
+import 'package:uniqcast/modules/authentication/user_model.dart';
 
 abstract class StorageProvider {
   static void logOut() {

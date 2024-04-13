@@ -8,7 +8,6 @@ const double sh5 = 16.0;
 const double sh6 = 14.0;
 const double sh7 = 12.0;
 
-
 // Font style
 const TextStyle textSH1 = TextStyle(fontSize: sh1);
 const TextStyle textSH2 = TextStyle(fontSize: sh2);
