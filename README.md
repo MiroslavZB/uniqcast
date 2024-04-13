@@ -2,6 +2,9 @@
 
 ## Notes for Reviewer
 
+Code Style - I use 116 character long lines instead of the default 80. This way I use all the 
+horizontal space even though I have an emulator on the right.
+
 I haven't used the better player package for several reasons. The package is in beta and in the 
 footer of the documentation informs of possible coming breaking changes. The package also hasn't 
 been updated for 22 months and has no support for common platforms the team at uniqcast might be 
@@ -10,11 +13,17 @@ interested in such as web and desktop.
 I am using an alternative package which does support all of the flutter platforms, is updated 
 recently and is not in beta.
 
+My videos are also playable in any platform - Android, iOS, MacOS, Web etc.
+
+I am not sure if those are the correct channel images. 
+I tried using the Channel -> logos -> CARD/NORMAL as the image id, but only two channels had 
+images. 
+
 ## Code walkthrough
 I am using google fonts package for picking a font.
 API:
     - I have used the Dio package
-    - RequestInterceptor adds the headers and logs the user out on 401 (unauthenticated) server 
+    - RequestInterceptor adds the headers and logs the user out on 401 (Unauthenticated) server 
     response
     - There is a LogLevel to change the level of logging
     - All requests are type-safe via Generics
@@ -30,7 +39,7 @@ Auth module:
     - login page, accesses the login state (provider),
     which, in term, accesses the auth service 
     which is the gateway to the client, 
-    which returns a login response object
+    which returns a user object
     handled by login state
 
 Channels module:
