@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uniqcast/api/factories.dart';
@@ -17,7 +18,7 @@ class Client {
   Client(this.ref);
 
   // Logging
-  LogLevel get _logLevel => LogLevel.basic;
+  LogLevel get _logLevel => LogLevel.fullBody;
 
   // Client
   String get _baseUrl => 'https://office-new-dev.uniqcast.com:12611/api/client';
@@ -25,8 +26,8 @@ class Client {
   Dio get _dio => Dio(BaseOptions(baseUrl: _baseUrl))
     ..interceptors.addAll(
       [
-        CustomRequestInterceptor(_logLevel),
-        CustomLogInterceptor(_logLevel, ref),
+        CustomRequestInterceptor(_logLevel, ref),
+        CustomLogInterceptor(_logLevel),
       ],
     );
 
@@ -77,6 +78,7 @@ class Client {
         options: Options(responseType: ResponseType.bytes, followRedirects: false),
       );
 
+      if (kIsWeb) return File.fromRawPath(response.data);
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath = appDocDir.path;
 
@@ -87,9 +89,12 @@ class Client {
       raf.writeFromSync(response.data as List<int>);
       await raf.close();
       return file;
+    } on DioException catch (e, s) {
+      log('Downloading file from $endPoint with $queryParams caught DioException: ${e.error} $s');
     } catch (e, s) {
-      log('Downloading file from $endPoint with $queryParams returned an error: $e $s');
-      return null;
+      log('Downloading file from $endPoint with $queryParams caught an error: $e $s');
     }
+
+    return null;
   }
 }
