@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,6 +21,8 @@ class LoginPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = Theme.of(context).colorScheme;
+
     ref.listen(loginStateProvider, (previous, next) {
       if (previous == next || !next.hasError || next.error is! DioException) return;
       context.showSnackBar(context, (next.error as DioException).serverErrorMessage);
@@ -38,93 +42,103 @@ class LoginPage extends HookConsumerWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: t.surface,
       body: SafeArea(
         child: UnfocusWrap(
           child: Form(
             key: formKey,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  KeyboardVisibilityListener(
-                    listener: (isKeyboardVisible) => logoIsVisible.value = !isKeyboardVisible,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 50),
-                      child: logoIsVisible.value
-                          ? SvgPicture.asset(
-                              Assets.uniqcastLogo,
-                              // ignore: deprecated_member_use
-                              color: Theme.of(context).colorScheme.primaryContainer,
-                              width: percentWidth(context, 50),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: TextFormField(
-                      controller: firstNameController,
-                      validator: (String? value) => nonEmptyField(value, 'First name'),
-                      decoration: textFieldDecoration(t: Theme.of(context).colorScheme).copyWith(
-                        hintText: 'First name',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: TextFormField(
-                      controller: lastNameController,
-                      validator: (String? value) => nonEmptyField(value, 'Last name'),
-                      decoration: textFieldDecoration(t: Theme.of(context).colorScheme).copyWith(
-                        hintText: 'Last name',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: TextFormField(
-                      controller: usernameController,
-                      validator: (String? value) => nonEmptyField(value, 'Username'),
-                      decoration: textFieldDecoration(t: Theme.of(context).colorScheme).copyWith(
-                        hintText: 'Username',
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: TextFormField(
-                      controller: passwordController,
-                      validator: (String? value) => nonEmptyField(value, 'Password'),
-                      obscureText: passwordIsObscure.value,
-                      decoration: textFieldDecoration(t: Theme.of(context).colorScheme).copyWith(
-                        hintText: 'Password',
-                        suffixIcon: IconButton(
-                          onPressed: passwordIsObscure.flip,
-                          icon: Icon(
-                            passwordIsObscure.value ? Icons.visibility_off : Icons.visibility,
-                            color: Theme.of(context).colorScheme.primary,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        KeyboardVisibilityListener(
+                          listener: (isKeyboardVisible) => logoIsVisible.value =
+                              (Platform.isIOS || Platform.isAndroid) ? !isKeyboardVisible : true,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 50),
+                            child: logoIsVisible.value
+                                ? SvgPicture.asset(
+                                    Assets.uniqcastLogo,
+                                    // ignore: deprecated_member_use
+                                    color: t.primaryContainer,
+                                    width: percentWidth(context, 50),
+                                  )
+                                : const SizedBox.shrink(),
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: TextFormField(
+                            controller: firstNameController,
+                            validator: (String? value) => nonEmptyField(value, 'First name'),
+                            decoration: textFieldDecoration(t: t).copyWith(
+                              hintText: 'First name',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: TextFormField(
+                            controller: lastNameController,
+                            validator: (String? value) => nonEmptyField(value, 'Last name'),
+                            decoration: textFieldDecoration(t: t).copyWith(
+                              hintText: 'Last name',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: TextFormField(
+                            controller: usernameController,
+                            validator: (String? value) => nonEmptyField(value, 'Username'),
+                            decoration: textFieldDecoration(t: t).copyWith(
+                              hintText: 'Username',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: TextFormField(
+                            controller: passwordController,
+                            validator: (String? value) => nonEmptyField(value, 'Password'),
+                            obscureText: passwordIsObscure.value,
+                            decoration: textFieldDecoration(t: t).copyWith(
+                              hintText: 'Password',
+                              suffixIcon: IconButton(
+                                onPressed: passwordIsObscure.flip,
+                                icon: Icon(
+                                  passwordIsObscure.value ? Icons.visibility_off : Icons.visibility,
+                                  color: t.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        ExpandedButton(
+                          isLoading: state.isLoading,
+                          onTap: () {
+                            if (formKey.valid) {
+                              notifier
+                                  .login(
+                                    username: usernameController.text,
+                                    password: passwordController.text,
+                                    firstName: firstNameController.text,
+                                    lastName: lastNameController.text,
+                                  )
+                                  .whenComplete(unfocus);
+                            }
+                          },
+                          text: 'Login',
+                        ),
+                      ],
                     ),
                   ),
-                  ExpandedButton(
-                    isLoading: state.isLoading,
-                    onTap: () {
-                      if (formKey.valid) {
-                        notifier
-                            .login(
-                              username: usernameController.text,
-                              password: passwordController.text,
-                              firstName: firstNameController.text,
-                              lastName: lastNameController.text,
-                            )
-                            .whenComplete(unfocus);
-                      }
-                    },
-                    text: 'Login',
-                  ),
-                ],
+                ),
               ),
             ),
           ),

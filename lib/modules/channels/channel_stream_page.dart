@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:uniqcast/components/responsive_widgets/resposive_size.dart';
 import 'package:uniqcast/functions/percent_size.dart';
 import 'package:uniqcast/modules/channels/channels_list_view.dart';
 import 'package:uniqcast/modules/channels/state/channel_stream_state.dart';
@@ -53,7 +54,7 @@ class _ChannelViewPageState extends ConsumerState<ChannelStreamPage> {
             controller == null
                 ? Container(
                     constraints: BoxConstraints(
-                      maxWidth: 800 - 30,
+                      maxWidth: 800 - 30, // 30 for the horizontal padding
                       maxHeight: responsiveSize(
                         context,
                         largeSize: percentHeight(context, 60),
@@ -94,24 +95,3 @@ class _ChannelViewPageState extends ConsumerState<ChannelStreamPage> {
     super.dispose();
   }
 }
-
-bool isLarge(BuildContext context) => percentWidth(context) >= largeScreenSize;
-bool isMedium(BuildContext context) =>
-    percentWidth(context) > mediumScreenSize && percentWidth(context) < largeScreenSize;
-bool isSmall(BuildContext context) => percentWidth(context) < smallScreenSize;
-
-const int largeScreenSize = 1366;
-const int mediumScreenSize = 768;
-const int smallScreenSize = 378;
-
-double responsiveSize(
-  BuildContext context, {
-  required double largeSize,
-  double? mediumSize,
-  double? smallSize,
-}) =>
-    isLarge(context)
-        ? largeSize
-        : isMedium(context)
-            ? (mediumSize ?? largeSize)
-            : smallSize ?? largeSize;
