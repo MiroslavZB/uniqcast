@@ -10,6 +10,8 @@ interested in such as web and desktop.
 I am using an alternative package which does support all of the flutter platforms, is updated 
 recently and is not in beta.
 
+My videos are also playable in any platform - Android, iOS, MacOS, Web etc.
+
 ## Code walkthrough
 I am using google fonts package for picking a font.
 API:
