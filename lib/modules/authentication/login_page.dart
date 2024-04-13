@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:uniqcast/components/expanded_button.dart';
+import 'package:uniqcast/modules/authentication/login_button.dart';
 import 'package:uniqcast/functions/percent_size.dart';
 import 'package:uniqcast/modules/authentication/login_state.dart';
 import 'package:uniqcast/modules/text_field/input_decoration.dart';
@@ -45,14 +45,14 @@ class LoginPage extends HookConsumerWidget {
       backgroundColor: t.surface,
       body: SafeArea(
         child: UnfocusWrap(
-          child: Form(
-            key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: formKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -119,21 +119,23 @@ class LoginPage extends HookConsumerWidget {
                             ),
                           ),
                         ),
-                        ExpandedButton(
-                          isLoading: state.isLoading,
-                          onTap: () {
-                            if (formKey.valid) {
-                              notifier
-                                  .login(
-                                    username: usernameController.text,
-                                    password: passwordController.text,
-                                    firstName: firstNameController.text,
-                                    lastName: lastNameController.text,
-                                  )
-                                  .whenComplete(unfocus);
-                            }
-                          },
-                          text: 'Login',
+                        Padding(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: LoginButton(
+                            isLoading: state.isLoading,
+                            onTap: () {
+                              if (formKey.valid) {
+                                notifier
+                                    .login(
+                                      username: usernameController.text,
+                                      password: passwordController.text,
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                    )
+                                    .whenComplete(unfocus);
+                              }
+                            },
+                          ),
                         ),
                       ],
                     ),
