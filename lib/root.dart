@@ -21,7 +21,7 @@ class Root extends HookConsumerWidget {
               StorageProvider.logOut();
               ref.invalidate(routerProvider);
             },
-            icon: const Icon(Icons.logout),
+            icon: Icon(Icons.logout, color: t.onSurface),
           ),
         ],
       ),
@@ -31,13 +31,9 @@ class Root extends HookConsumerWidget {
             Text(
               'Welcome to Uniqcast!',
               style: TextStyle(
-                  fontSize: responsiveSize(
-                    context,
-                    largeSize: sh1,
-                    mediumSize: sh3,
-                    smallSize: sh4,
-                  ),
-                  color: t.onSurface),
+                fontSize: responsiveSize(context, largeSize: sh1, mediumSize: sh3, smallSize: sh4),
+                color: t.onSurface,
+              ),
             ),
             const Expanded(child: ChannelsListView()),
           ],

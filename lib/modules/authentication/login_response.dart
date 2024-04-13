@@ -23,8 +23,8 @@ class LoginResponse {
 
   LoginResponse({
     required this.token,
-    required this.name,
     required this.userId,
+    this.name,
     required this.operatorUid,
     required this.deviceId,
     required this.isBlocked,

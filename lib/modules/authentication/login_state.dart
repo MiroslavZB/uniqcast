@@ -25,25 +25,25 @@ class LoginState extends _$LoginState {
     try {
       state = const AsyncValue.loading();
 
-      final data = await authService.login(
+      final loginResponse = await authService.login(
         username: username,
         password: password,
         firstName: firstName,
         lastName: lastName,
       );
 
-      final expiryTime = int.tryParse(data.expiryTime ?? '');
+      final expiryTime = int.tryParse(loginResponse.expiryTime ?? '');
 
-      final expiryDate = data.expiryTime == null
+      final expiryDate = loginResponse.expiryTime == null
           ? DateTime(2099, 12, 12)
           : expiryTime == null
               ? null
               : DateTime.now().add(Duration(milliseconds: expiryTime));
 
-      StorageProvider.setToken(data.token);
+      StorageProvider.setToken(loginResponse.token);
       StorageProvider.setExpiryDate(expiryDate);
 
-      final user = UserModel.fromLoginResponse(data, expiryDate);
+      final user = UserModel.fromLoginResponse(loginResponse, expiryDate);
       StorageProvider.setUser(user);
 
       ref.watch(userStateProvider.notifier).set(user);

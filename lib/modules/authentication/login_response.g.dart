@@ -9,8 +9,8 @@ part of 'login_response.dart';
 LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
     LoginResponse(
       token: json['access_token'] as String,
-      name: json['operator_name'] as String?,
       userId: json['user_id'] as int,
+      name: json['operator_name'] as String?,
       operatorUid: json['operator_uid'] as String,
       deviceId: json['device_id'] as int,
       isBlocked: json['is_blocked'] as bool,
