@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uniqcast/functions/schedule_after_build.dart';
 import 'package:uniqcast/modules/authentication/login_page.dart';
-import 'package:uniqcast/modules/channels/channel_main_page.dart';
+import 'package:uniqcast/modules/channels/channel_stream_page.dart';
 import 'package:uniqcast/modules/user/user_state.dart';
 import 'package:uniqcast/root.dart';
 import 'package:uniqcast/routing/app_route.dart';
@@ -44,6 +44,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => NoTransitionPage(
           key: state.pageKey,
           child: const LoginPage(),
+        ),
+      ),
+      GoRoute(
+        path: AppRoute.channelStream.path,
+        name: AppRoute.channelStream.name,
+        pageBuilder: (context, state) => NoTransitionPage(
+          key: state.pageKey,
+          child: ChannelStreamPage(state.extra as ChannelStreamPageArgs),
         ),
       ),
     ],
