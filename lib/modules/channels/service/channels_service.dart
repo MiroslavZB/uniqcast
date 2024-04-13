@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:uniqcast/api/client.dart';
 import 'package:uniqcast/modules/channels/models/channel.dart';
@@ -18,23 +19,16 @@ class ChannelsService {
         queryParams: {'packages': packageIds},
       );
 
-  // Future<String> channelImage({
-  //   required int channelId,
-  //   required String accessKey,
-  // }) =>
-  //     client.get<String>(
-  //       '/v1/global/images/$channelId',
-  //       queryParams: {'accessKey': accessKey},
-  //     );
-
-  Future<File?> channelImage({
-    required int logoId,
-    required int channelId,
-    required String accessKey,
-  }) =>
-      client.downloadFile(
-        endPoint: '/v1/global/images/$logoId',
+  Future<File?> channelImage({required int logoId, required int channelId}) => client.downloadFile(
+        endPoint: '/v1/global/images/$logoId', //'/v1/global/images/$channelId',
         savePath: 'image$channelId.png',
-        queryParams: {'accessKey': accessKey},
+        queryParams: {'accessKey': 'WkVjNWNscFhORDBLCg=='},
+      );
+
+  Future<Uint8List?> channelImageForWeb({required int logoId, required int channelId}) =>
+      client.downloadFileForWeb(
+        endPoint: '/v1/global/images/$logoId', //'/v1/global/images/$channelId',
+        savePath: 'image$channelId.png',
+        queryParams: {'accessKey': 'WkVjNWNscFhORDBLCg=='},
       );
 }

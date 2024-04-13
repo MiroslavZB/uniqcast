@@ -78,7 +78,6 @@ class Client {
         options: Options(responseType: ResponseType.bytes, followRedirects: false),
       );
 
-      if (kIsWeb) return File.fromRawPath(response.data);
       Directory appDocDir = await getApplicationDocumentsDirectory();
       String appDocPath = appDocDir.path;
 
@@ -93,6 +92,29 @@ class Client {
       log('Downloading file from $endPoint with $queryParams caught DioException: ${e.error} $s');
     } catch (e, s) {
       log('Downloading file from $endPoint with $queryParams caught an error: $e $s');
+    }
+
+    return null;
+  }
+
+  Future<Uint8List?> downloadFileForWeb({
+    required String savePath,
+    required String endPoint,
+    Map<String, dynamic>? queryParams,
+  }) async {
+    try {
+      if(!kIsWeb) return null;
+      Response response = await _dio.get(
+        endPoint,
+        queryParameters: queryParams,
+        options: Options(responseType: ResponseType.bytes, followRedirects: false),
+      );
+
+      return response.data as Uint8List;
+    } on DioException catch (e, s) {
+      log('2Downloading Web file from $endPoint with $queryParams caught DioException: ${e.error} $s');
+    } catch (e, s) {
+      log('1Downloading Web file from $endPoint with $queryParams caught an error: $e $s');
     }
 
     return null;

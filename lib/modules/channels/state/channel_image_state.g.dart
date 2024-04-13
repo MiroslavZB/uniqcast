@@ -6,7 +6,7 @@ part of 'channel_image_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$channelImageStateHash() => r'd0ce2ad091ae35f911a9c927daba2f7c5be7a5f5';
+String _$channelImageStateHash() => r'ccf76429489d3cac7204e762b7aceabbae800e05';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,10 +29,10 @@ class _SystemHash {
   }
 }
 
-abstract class _$ChannelImageState extends BuildlessAsyncNotifier<File?> {
+abstract class _$ChannelImageState extends BuildlessAsyncNotifier<Image?> {
   late final Channel channel;
 
-  FutureOr<File?> build(
+  FutureOr<Image?> build(
     Channel channel,
   );
 }
@@ -42,7 +42,7 @@ abstract class _$ChannelImageState extends BuildlessAsyncNotifier<File?> {
 const channelImageStateProvider = ChannelImageStateFamily();
 
 /// See also [ChannelImageState].
-class ChannelImageStateFamily extends Family<AsyncValue<File?>> {
+class ChannelImageStateFamily extends Family<AsyncValue<Image?>> {
   /// See also [ChannelImageState].
   const ChannelImageStateFamily();
 
@@ -81,7 +81,7 @@ class ChannelImageStateFamily extends Family<AsyncValue<File?>> {
 
 /// See also [ChannelImageState].
 class ChannelImageStateProvider
-    extends AsyncNotifierProviderImpl<ChannelImageState, File?> {
+    extends AsyncNotifierProviderImpl<ChannelImageState, Image?> {
   /// See also [ChannelImageState].
   ChannelImageStateProvider(
     Channel channel,
@@ -112,7 +112,7 @@ class ChannelImageStateProvider
   final Channel channel;
 
   @override
-  FutureOr<File?> runNotifierBuild(
+  FutureOr<Image?> runNotifierBuild(
     covariant ChannelImageState notifier,
   ) {
     return notifier.build(
@@ -137,7 +137,7 @@ class ChannelImageStateProvider
   }
 
   @override
-  AsyncNotifierProviderElement<ChannelImageState, File?> createElement() {
+  AsyncNotifierProviderElement<ChannelImageState, Image?> createElement() {
     return _ChannelImageStateProviderElement(this);
   }
 
@@ -155,13 +155,13 @@ class ChannelImageStateProvider
   }
 }
 
-mixin ChannelImageStateRef on AsyncNotifierProviderRef<File?> {
+mixin ChannelImageStateRef on AsyncNotifierProviderRef<Image?> {
   /// The parameter `channel` of this provider.
   Channel get channel;
 }
 
 class _ChannelImageStateProviderElement
-    extends AsyncNotifierProviderElement<ChannelImageState, File?>
+    extends AsyncNotifierProviderElement<ChannelImageState, Image?>
     with ChannelImageStateRef {
   _ChannelImageStateProviderElement(super.provider);
 

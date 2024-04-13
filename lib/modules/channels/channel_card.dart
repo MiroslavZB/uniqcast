@@ -69,7 +69,7 @@ class ChannelCard extends HookConsumerWidget {
               child: channelImageState.when(
                 data: (data) {
                   if (data == null) return const SizedBox.shrink();
-                  return Image.file(data, fit: BoxFit.cover);
+                  return data;
                 },
                 error: (e, s) {
                   log('channelImageState error at ${channel.id}');
