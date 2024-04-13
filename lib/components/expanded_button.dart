@@ -55,7 +55,13 @@ class ExpandedButton extends StatelessWidget {
           borderRadius: extraSmallBorderRadius,
         ),
         child: isLoading
-            ? Center(child: CircularProgressIndicator(color: onColor))
+            ? Center(
+              child: SizedBox(
+                  height: 26,
+                  width: 26,
+                  child: CircularProgressIndicator(color: onColor),
+                ),
+            )
             : Row(
                 mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.center,
                 children: [
